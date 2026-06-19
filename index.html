@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>台股系統（修正版）</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+body { font-family: Arial; background:#f5f5f5; padding:10px; }
+.card { background:white; padding:12px; margin:8px 0; border-radius:10px; cursor:pointer; }
+.card:active { background:#ddd; }
+</style>
+</head>
+
+<body>
+
+<h2>📊 台股系統（可點修正版）</h2>
+
+<div id="menu"></div>
+<div id="content"></div>
+
+<script>
+
+const TOKEN = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoiYWRpYW8zOTFAZ21haWwuY29tIiwiZW1haWwiOiJhZGlhbzM5MUBnbWFpbC5jb20iLCJ0b2tlbl92ZXJzaW9uIjoyfQ.u3Qi3bPOfRH6FYOnLqzw_rJvrO2rLhngPbEiUcItqSo";
+
+let stocks = [
+  {id:"2330", name:"台積電"},
+  {id:"2454", name:"聯發科"},
+  {id:"2317", name:"鴻海"},
+  {id:"2881", name:"富邦金"}
+];
+
+// ======================
+// 📌 畫主選單
+// ======================
+function init(){
+
+  document.getElementById("menu").innerHTML = `
+    <div class="card" data-action="list">📊 全部股票</div>
+    <div class="card" data-action="volume">🔥 成交量排行</div>
+  `;
+
+  document.getElementById("menu").addEventListener("click", handleMenu);
+}
+
+// ======================
+// 🧠 點擊統一管理（關鍵修復）
+// ======================
+function handleMenu(e){
+
+  let action = e.target.getAttribute("data-action");
+
+  if(!action) return;
+
+  if(action === "list") showList();
+  if(action === "volume") showVolume();
+}
+
+// ======================
+// 📊 全部股票
+// ======================
+function showList(){
+
+  let html = "<h3>全部股票</h3>";
+
+  stocks.forEach(s=>{
+    html += `
+      <div class="card" data-id="${s.id}" data-name="${s.name}">
+        ${s.id} ${s.name}
+      </div>
+    `;
+  });
+
+  document.getElementById("content").innerHTML = html;
+
+  document.getElementById("content").onclick = function(e){
+
+    let card = e.target.closest(".card");
+    if(!card || !card.dataset.id) return;
+
+    showStock(card.dataset.id, card.dataset.name);
+  };
+}
+
+// ======================
+// 🔥 成交量（模擬）
+// ======================
+function showVolume(){
+
+  let html = "<h3>成交量排行</h3>";
+
+  stocks.forEach((s,i)=>{
+
+    html += `
+      <div class="card" data-id="${s.id}" data-name="${s.name}">
+        ${s.id} ${s.name}<br>
+        成交量：${Math.floor(Math.random()*100000)}
+      </div>
+    `;
+  });
+
+  document.getElementById("content").innerHTML = html;
+
+  document.getElementById("content").onclick = function(e){
+
+    let card = e.target.closest(".card");
+    if(!card || !card.dataset.id) return;
+
+    showStock(card.dataset.id, card.dataset.name);
+  };
+}
+
+// ======================
+// 📉 個股
+// ======================
+function showStock(id,name){
+
+  document.getElementById("content").innerHTML = `
+    <div class="card">
+      📉 ${name} (${id})<br><br>
+      ✔ 點擊成功<br>
+      （這裡之後可接 API）
+    </div>
+  `;
+}
+
+init();
+
+</script>
+
+</body>
+</html>
